@@ -6,7 +6,7 @@ on:
 
 jobs:
   update-doc-vec-db:
-    runs-on: scc-vm-a100
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v5
 
