@@ -6,8 +6,8 @@ set -euo pipefail
 #
 REPO_DIR=$(dirname "$0")
 DATA_URL="https://github.com/chpc-tech-eval/scc"
-OUTPUT_DIR="$REPO_DIR/data/raw"
-TEMP_GITHUB="/tmp/selection_round_github"
+OUTPUT_DIR="/opt/shared/data/raw"
+TEMP_GITHUB="/opt/shared/data/_selection_round_github"
 
 
 mkdir -p "$OUTPUT_DIR"
