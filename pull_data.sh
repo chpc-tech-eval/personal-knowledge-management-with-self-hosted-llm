@@ -21,5 +21,5 @@ find "$TEMP_GITHUB" -name "*.md" -type f | while read file; do
     # Convert path to safe filename
     new_name=$(echo "$file" | sed "s|$TEMP_GITHUB/||" | tr '/' '_')
     cp "$file" "$OUTPUT_DIR/$new_name"
-    echo "Copied: $file → $new_name"
+    echo "Copied: $file -> $new_name"
 done
