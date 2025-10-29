@@ -31,8 +31,3 @@ jobs:
             --output-dir=/opt/shared \
             --ExecutePreprocessor.timeout=600 \
             rag_update_documents.ipynb
-      
-      - name: Set permissions
-        run: |
-          chown -R root:oc /opt/shared/data
-          chmod -R 775 /opt/shared/data
