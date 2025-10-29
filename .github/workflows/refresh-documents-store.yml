@@ -34,5 +34,5 @@ jobs:
       
       - name: Set permissions
         run: |
-          chown -R shaun:oc /opt/shared/data
+          chown -R root:oc /opt/shared/data
           chmod -R 775 /opt/shared/data
