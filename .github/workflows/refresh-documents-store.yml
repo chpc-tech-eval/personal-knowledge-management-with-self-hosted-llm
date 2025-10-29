@@ -34,4 +34,5 @@ jobs:
       
       - name: Set permissions
         run: |
-          chmod 775 /shared/path/chromadb
+          chown -R shaun:oc /opt/shared/
+          chmod -R 775 /opt/shared/
