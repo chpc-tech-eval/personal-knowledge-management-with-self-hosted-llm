@@ -8,8 +8,8 @@ import os
 
 
 # Base model we will use
-MODEL = "meta-llama/Llama-3.2-3B-Instruct" 
-
+# MODEL = "meta-llama/Llama-3.2-3B-Instruct" 
+MODEL = "unsloth/Llama-3.2-3B-Instruct"
 # Fine_Tuned Model
 new_model = "Llama-3.2-3B-finetuned-lora"
 
@@ -43,7 +43,7 @@ for path in files:
 
 # single example per file
 dataset = Dataset.from_list(examples)
-
+print("Dataset Compiled Successfully")
 # optional: create a train/test split
 # dataset = dataset.train_test_split(test_size=0.1)
 
@@ -73,13 +73,15 @@ peft_params = LoraConfig(
 
 training_params = TrainingArguments(
     output_dir="./results",
-    num_train_epochs=1,
+    num_train_epochs=5,
     per_device_train_batch_size=4,
     gradient_accumulation_steps=1,
     optim="paged_adamw_32bit",
-    save_steps=25,
+#    save_steps=25,
+    save_steps=200,
     logging_steps=25,
-    learning_rate=2e-4,
+#    learning_rate=2e-4,
+    learning_rate=1e-5,
     weight_decay=0.001,
     fp16=False,
     bf16=False,
@@ -88,7 +90,8 @@ training_params = TrainingArguments(
     warmup_ratio=0.03,
     group_by_length=True,
     lr_scheduler_type="constant",
-    report_to="tensorboard"
+  #  report_to="tensorboard"
+    report_to=None
 )
 
 # Load the model object (required by SFTTrainer). This may require HF auth and
@@ -107,24 +110,38 @@ trainer = SFTTrainer(
     model=model,
     train_dataset=dataset,
     peft_config=peft_params,
-    dataset_text_field="text",
-    max_seq_length=None,
-    tokenizer=tokenizer,
+ #   max_seq_length=None,
+ #   tokenizer=tokenizer,
     args=training_params,
-    packing=False,
+ #   packing=False,
 )
+print("Starting Training")
+trainer.train()
+print("Training Complete")
 
 # Save the (possibly LoRA-adapted) model and tokenizer after training or when
 # you're ready. Saving now will save the base model state as currently loaded.
 trainer.model.save_pretrained(new_model)
 trainer.tokenizer.save_pretrained(new_model)
+print("Training Complete")
 
-prompt = "What is Tutorial 1 about?"
 # Use device=0 for GPU if available, else -1 for CPU
 pipeline_device = 0 if torch.cuda.is_available() else -1
-pipe = pipeline(task="text-generation", model=model, tokenizer=tokenizer, device=pipeline_device, max_length=200)
-result = pipe(f"<s>[INST] {prompt} [/INST]")
-print(result[0]['generated_text'])
+
+while True:
+    print("> ", end="")
+    userinput = input()
+
+    if not userinput:
+        continue
+
+    if userinput == "quit" or userinput == "q" or userinput == "exit":
+        break
+
+    pipe = pipeline(task="text-generation", model=model, tokenizer=tokenizer, max_length=300)
+    result = pipe(f"<s>[INST] {userinput} [/INST]")
+    print(result[0]['generated_text'])
+
 
 
 # model = AutoModelForCausalLM.from_pretrained(
