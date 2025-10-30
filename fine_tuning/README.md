@@ -23,7 +23,6 @@ conda init bash
 
 4. update the current env with packages from environment.yml
 conda env update -f environment.yml --prune
-```
 
 5. Authenticate with Hugging Face (if required by the model):
 
