@@ -11,6 +11,7 @@
 - `ssh -i ~/.ssh/<yourprivatekey> -L 8888:localhost:8888 <username>@<node-ip>`
     - For Shaun its `ssh -i ~/.ssh/oc -L 8888:localhost:8888 shaun@scc-gpu`
     - For Glen its `ssh -i ~/.ssh/id_ed25519 -L 8888:localhost:8888 [glen@196.24.241.72](mailto:glen@196.24.241.72)`
+    - For Tam it's `ssh -i ~/.ssh/capstone_key -L 8888:localhost:8888 tamryn@192.24.241.72`
 - Copy the command given in the JupyterLab output with the token
     - It starts with `http://localhost:8888/lab?token=`
 
