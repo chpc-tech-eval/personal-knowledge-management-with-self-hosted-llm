@@ -104,6 +104,7 @@ model = AutoModelForCausalLM.from_pretrained(
     device_map="auto",
     trust_remote_code=True,
 )
+# The cache is not useful during fine-tuning training, it's a KV cache aimed at inference
 model.config.use_cache = False
 
 trainer = SFTTrainer(
