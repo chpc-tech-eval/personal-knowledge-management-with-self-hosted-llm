@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  update-doc-vec-db:
+  rebuild-retrieval-database:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v5
@@ -30,7 +30,7 @@ jobs:
           uv run jupyter nbconvert --to notebook --execute \
             --output-dir=/opt/shared/workflows \
             --ExecutePreprocessor.timeout=600 \
-            src/rag_update_documents.ipynb
+            src/retrieval_db_update.ipynb
 
   finetune-model:
     runs-on: self-hosted
