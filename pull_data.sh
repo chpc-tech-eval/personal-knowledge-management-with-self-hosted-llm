@@ -1,10 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-# ARG IS PATH TO SCRIPT
-# Cloning Github repo markown
-#
-REPO_DIR=$(dirname "$0")
 DATA_URL="https://github.com/chpc-tech-eval/scc"
 OUTPUT_DIR="/opt/shared/data/raw"
 TEMP_GITHUB="/opt/shared/data/_selection_round_github"
@@ -16,10 +12,10 @@ mkdir -p "$OUTPUT_DIR"
 
 echo "Extracting the markdown files"
 
-# Deep Seek cooked a little here:
+# DeepSeek cooked a little here:
 find "$TEMP_GITHUB" -name "*.md" -type f | while read file; do
     # Convert path to safe filename
     new_name=$(echo "$file" | sed "s|$TEMP_GITHUB/||" | tr '/' '_')
     cp "$file" "$OUTPUT_DIR/$new_name"
-    echo "Copied: $file -> $new_name"
+    echo "Copied: $file -> $OUTPUT_DIR/$new_name"
 done
