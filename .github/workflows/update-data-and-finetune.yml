@@ -32,7 +32,6 @@ jobs:
             --ExecutePreprocessor.timeout=600 \
             src/rag_update_documents.ipynb
 
-jobs:
   finetune-model:
     runs-on: self-hosted
     needs: update-doc-vec-db
