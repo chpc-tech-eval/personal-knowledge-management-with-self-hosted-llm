@@ -28,6 +28,33 @@ jobs:
       - name: Execute notebook
         run: |
           uv run jupyter nbconvert --to notebook --execute \
-            --output-dir=/opt/shared \
+            --output-dir=/opt/shared/workflows \
             --ExecutePreprocessor.timeout=600 \
-            rag_update_documents.ipynb
+            notebooks/rag_update_documents.ipynb
+
+  finetune-model:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          # pin to a particular uv version
+          version: "0.9.5"
+          # enable caching deps to speed up subsequent runs
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync
+
+      # uv run: automatically uses the .venv set up by `uv sync`
+      # nbconvert --to notebook: convert notebook to notebook - just a hack to execute it too
+      # --execute: generate a new ipynb with all cells executed
+      # --output-dir=...: write the resulting notebook out for debugging purposes
+      - name: Execute notebook
+        run: |
+          uv run jupyter nbconvert --to notebook --execute \
+            --output-dir=/opt/shared/workflows \
+            --ExecutePreprocessor.timeout=600 \
+            notebooks/finetuning.ipynb
