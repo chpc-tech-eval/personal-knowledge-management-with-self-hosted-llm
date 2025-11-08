@@ -34,7 +34,7 @@ jobs:
 
   finetune-model:
     runs-on: self-hosted
-    needs: update-doc-vec-db
+    needs: rebuild-retrieval-database
     steps:
       - uses: actions/checkout@v5
 
