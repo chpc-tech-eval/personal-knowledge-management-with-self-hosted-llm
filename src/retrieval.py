@@ -22,8 +22,6 @@ class Retrieval:
         Loads the embeddings model and the documents from the vector database.
         """
         
-        self.already_injected = set()
-
         if log:
             print(f"Loading the sentence transformer, {model} ...")
 
@@ -46,16 +44,9 @@ class Retrieval:
         if log:
             print("Initializing retrieval done")
 
-    def reset(self):
+    def augment(self, userinput: str, n_results: int, history: set[list[float]] = None, log: bool = False) -> str:
         """
-        Resets conversation history.
-        """
-
-        self.already_injected = set()
-
-    def augment(self, userinput: str, maxdocs: int, log: bool = False) -> str:
-        """
-        Augments `userinput` to include up to `maxdocs` document chunks prepended as context.
+        Augments `userinput` to include up to `n_results` document chunks prepended as context.
         Some models may have a chat template for RAG, but notably Qwen does not. This approach works for any model.
 
         This can be passed into a chat template and given to an LLM to implement Retrieval-Augmented Generation.
@@ -69,18 +60,18 @@ class Retrieval:
     
         results = self.vector_collection.query(
             query_embeddings=query_embeddings,
-            n_results=maxdocs,
+            n_results=n_results,
             include=['documents', 'distances'], # returns 'ids', 'documents', 'distances' not 'metadatas'
         )
     
         docs = []
         for doc_id, doc, dist in zip(results['ids'][0], results['documents'][0], results['distances'][0]):
-            if doc_id not in self.already_injected:
+            if history is None or doc_id not in history:
                 # ChromaDB converts the cosine similarity result into something like "cosine distance"
                 # by subtracting it from one. This means 0 is most relevant and 2 is least relevant.
                 # This threshhold is arbitrary, chosen as it seems to work well with the dataset tested.
                 if dist < 0.62:
-                    self.already_injected.add(doc_id)
+                    history.add(doc_id)
                     docs.append({ "title": doc_id, "dist": dist, "text": doc })
                     
                     if log:
