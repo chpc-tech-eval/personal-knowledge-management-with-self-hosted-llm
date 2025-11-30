@@ -102,7 +102,7 @@ class Pipeline:
             user_query = body["messages"][-1]["content"]
             print("USER QUERY", user_query)
             augmented_content = self.retrieval.augment(user_query, self.valves.top_k, history=history, log=True)
-            body["messages"][-1]["content"] = augmented_content
+            body["__user__"][-1]["content"] = augmented_content
         except Exception as e:
             print(f"Error during RAG retrieval: {e}")
             # If RAG fails, continue with original query
